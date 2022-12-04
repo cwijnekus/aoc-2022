@@ -20,7 +20,29 @@ func main() {
 		priorities += intersectingItems(splitInventories(v))
 	}
 
-	fmt.Printf("The total amount of priorities is: %d", priorities)
+	fmt.Printf("The total amount of priorities is: %d\n", priorities)
+
+	groups := make([][]string, 0, len(inventories)/3)
+	for i := 0; i < len(inventories); i++ {
+		group := inventories[:3]
+		inventories = inventories[3:]
+		groups = append(groups, group)
+		i = 0
+	}
+
+	groupPrio := 0
+
+	for _, group := range groups {
+		for _, v := range group[0] {
+			if strings.Index(group[1], string(v)) >= 0 && strings.Index(group[2], string(v)) >= 0 {
+				fmt.Printf("We got a match: %s\n", string(v))
+				groupPrio += getPrio(string(v))
+				break
+			}
+		}
+	}
+
+	fmt.Printf("The total amount of group prio's: %d", groupPrio)
 }
 
 func splitInventories(inv string) (string, string) {
@@ -30,12 +52,10 @@ func splitInventories(inv string) (string, string) {
 func intersectingItems(part1 string, part2 string) int {
 	for _, v := range part1 {
 		if strings.Index(part2, string(v)) >= 0 {
-			fmt.Printf("Intersecting char: %s has prio %d\n", string(v), getPrio(string(v)))
 			return getPrio(string(v))
 		}
 	}
 	return 0
-
 }
 
 func getPrio(character string) int {
