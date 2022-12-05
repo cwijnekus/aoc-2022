@@ -21,18 +21,34 @@ func main() {
 
 	assignments := strings.Split(string(input), "\n")
 
+	containginPairs := 0
 	overlappingPairs := 0
 	for _, v := range assignments {
 		assign1, assign2 := splitAssignments(v)
+		if checkContains(assign1, assign2) || checkContains(assign2, assign1) {
+			containginPairs++
+		}
 		if checkOverlap(assign1, assign2) || checkOverlap(assign2, assign1) {
 			overlappingPairs++
 		}
 	}
 
+	fmt.Printf("Amount of containing groups are %d", containginPairs)
 	fmt.Printf("Amount of overlapping groups are %d", overlappingPairs)
 }
 
 func checkOverlap(range1 assignment, range2 assignment) bool {
+	if range2.min >= range1.min && range2.min <= range1.max {
+		return true
+	} else if range2.max >= range1.min && range2.max <= range1.max {
+		return true
+	} else {
+		fmt.Printf("Range 1: %v | Range 2: %v\n", range1, range2)
+		return false
+	}
+}
+
+func checkContains(range1 assignment, range2 assignment) bool {
 	return range1.min >= range2.min && range1.max <= range2.max
 }
 
